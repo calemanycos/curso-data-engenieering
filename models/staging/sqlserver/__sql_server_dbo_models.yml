@@ -1,0 +1,439 @@
+version: 2
+
+models:
+  - name: stg_sql_server_dbo__addresses
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: address_id
+        tests:
+          - unique
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Hash único para la dirección.
+      - name: zipcode
+        tests:
+          - not_null
+        data_type: numeric
+        constraints:
+          - type: not_null
+        description: >
+          Código postal de la dirección.
+      - name: country
+        tests:
+          - not_null
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          País de la dirección.
+      - name: address
+        tests:
+          - not_null
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Dirección detallada.
+      - name: state
+        tests:
+          - not_null
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Estado de la dirección.
+      - name: _fivetran_deleted
+        data_type: BOOLEAN
+        description: >
+          Indica si la fila fue eliminada por Fivetran.
+      - name: date_load_utc
+        tests:
+          - not_null
+        data_type: timestampTZ
+        constraints:
+          - type: not_null
+        description: >
+          Momento en que se sincronizó la fila con Fivetran.
+
+  - name: stg_sql_server_dbo__events
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: EVENT_ID
+        tests:
+          - unique
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Hash único para el evento.
+      - name: PAGE_URL
+        tests:
+          - not_null
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          URL de la página asociada al evento.
+      - name: EVENT_TYPE
+        tests:
+          - not_null
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Tipo de evento.
+      - name: USER_ID
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_sql_server_dbo__users')
+              field: USER_ID
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Hash único para el usuario.
+      - name: PRODUCT_ID
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Hash único para el producto asociado al evento.
+      - name: SESSION_ID
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Identificador único de la sesión asociada al evento.
+      - name: CREATED_AT
+        tests:
+          - not_null
+        data_type: timestampntz
+        constraints:
+          - type: not_null
+        description: >
+          Momento en que se creó el evento.
+      - name: ORDER_ID
+        tests:
+          - relationships:
+              field: ORDER_ID
+              to: ref('base_sql_server_dbo__orders')
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Hash único para la orden asociada al evento.
+      - name: _FIVETRAN_DELETED
+        data_type: boolean
+        description: >
+          Indica si la fila fue eliminada por Fivetran.
+      - name: date_load_utc
+        tests:
+          - not_null
+        data_type: timestampTZ
+        constraints:
+          - type: not_null
+        description: >
+          Momento en que se sincronizó la fila con Fivetran.
+
+ 
+  - name: stg_sql_server_dbo__order_items
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: ORDER_ID
+        tests:
+          - not_null
+          - relationships:
+              to: ref('base_sql_server_dbo__orders')
+              field: order_id
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Hash único para la orden.
+      - name: PRODUCT_ID
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_sql_server_dbo__products')
+              field: product_id
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Hash único para el producto.
+      - name: QUANTITY
+        tests:
+          - not_null
+          - positive_values
+        data_type: numeric
+        constraints:
+          - type: not_null
+        description: >
+          Cantidad del producto en la orden.
+      - name: _FIVETRAN_DELETED
+        data_type: boolean
+        description: >
+          Indica si la fila fue eliminada por Fivetran.
+      - name: date_load_utc
+        tests:
+          - not_null
+        data_type: timestampTZ
+        constraints:
+          - type: not_null
+        description: >
+          Momento en que se añadieron los datos
+
+  - name: stg_sql_server_dbo__products
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: PRODUCT_ID
+        tests:
+          - not_null
+          - unique
+
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Hash único para el producto.
+      - name: PRICE
+        tests:
+          - not_null
+        data_type: REAL
+        constraints:
+          - type: not_null
+        description: >
+          Precio del producto.
+      - name: NAME
+        tests:
+          - not_null
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Nombre del producto.
+      - name: INVENTORY
+        tests:
+          - not_null
+        data_type: numeric
+        constraints:
+          - type: not_null
+        description: >
+          Inventario disponible del producto.
+      - name: _FIVETRAN_DELETED
+        data_type: boolean
+        description: >
+          Indica si la fila fue eliminada por Fivetran.
+      - name: date_load_utc
+        tests:
+          - not_null
+        data_type: timestampTZ
+        constraints:
+          - type: not_null
+        description: >
+          Momento en que se sincronizó la fila con Fivetran.
+
+  - name: stg_sql_server_dbo__promos
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: PROMO_NAME
+        tests:
+          - not_null
+        data_type: VARCHAR (50)
+      - name: PROMO_ID
+        tests:
+          - not_null
+          - unique
+        data_type: VARCHAR
+        constraints:
+          - type: not_null
+        description: >
+          Hash único para la promoción.
+      - name: DISCOUNT_euros
+        tests:
+          - not_null
+        data_type: decimal(5,4)
+        constraints:
+          - type: not_null
+        description: >
+          Descuento ofrecido por la promoción.
+      - name: _FIVETRAN_DELETED
+        data_type: boolean
+        description: >
+          Indica si la fila fue eliminada por Fivetran.
+      - name: date_load_utc
+        tests:
+          - not_null
+        data_type: timestampTZ
+        constraints:
+          - type: not_null
+        description: >
+          Momento en que se sincronizó la fila con Fivetran.
+
+  - name: stg_sql_server_dbo__users
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: USER_ID
+        tests:
+          - not_null
+          - unique
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Hash único para el usuario.
+      - name: UPDATED_AT_utc
+        tests:
+          - not_null
+        data_type: timestamptz
+        constraints:
+          - type: not_null
+        description: >
+          Momento en que se actualizó la información del usuario.
+      - name: ADDRESS_ID
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_sql_server_dbo__addresses')
+              field: address_id
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Hash único para la dirección del usuario.
+      - name: LAST_NAME
+        tests:
+          - not_null
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Apellido del usuario.
+      - name: CREATED_AT
+        tests:
+          - not_null
+        data_type: timestamptz
+        constraints:
+          - type: not_null
+        description: >
+          Momento en que se creó el usuario.
+      - name: PHONE_NUMBER
+        tests:
+          - not_null
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Número de teléfono del usuario.
+      - name: TOTAL_ORDERS
+        data_type: numeric
+        description: >
+          Total de órdenes realizadas por el usuario.
+      - name: FIRST_NAME
+        tests:
+          - not_null
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Nombre del usuario.
+      - name: EMAIL
+        tests:
+          - not_null
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Correo electrónico del usuario.
+      - name: _FIVETRAN_DELETED
+        data_type: boolean
+        description: >
+          Indica si la fila fue eliminada por Fivetran.
+      - name: date_load_utc
+        tests:
+          - not_null
+        data_type: timestamptz
+        constraints:
+          - type: not_null
+        description: >
+          Momento en que se sincronizó la fila con Fivetran.
+      - name: IS_VALID_EMAIL_ADDRESS
+        data_type: boolean
+          
+  - name: stg_sql_server_dbo__orders
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: ORDER_ID
+        data_type: varchar
+        tests:
+          - unique
+        constraints:
+          - type: not_null
+        description: >
+          Identificador único para la orden.
+      - name: ADDRESS_ID
+        tests:
+          - relationships:
+              field: Address_id
+              to: ref('stg_sql_server_dbo__addresses')
+        data_type: varchar
+        constraints:
+          - type: not_null
+        description: >
+          Identificador de la dirección asociada a la orden.
+      - name: CREATED_AT
+        data_type: timestamp_TZ
+        description: >
+          Momento en que se creó la orden.
+      - name: PROMO_ID
+        data_type: varchar
+        constraints:
+          - type: not_null
+        description: >
+          Identificador de la promoción asociada a la orden.
+      - name: ORDER_COST
+        data_type: float
+        constraints:
+          - type: not_null
+        description: >
+          Costo de la orden.
+      - name: USER_ID
+        tests:
+          - relationships:
+              field: User_id
+              to: ref('stg_sql_server_dbo__users')
+        data_type: varchar
+        constraints:
+          - type: not_null
+        description: >
+          Identificador único para el usuario asociado a la orden.
+      - name: ORDER_TOTAL
+        data_type: float
+        constraints:
+          - type: not_null
+        description: >
+          Total de la orden.
+      - name: _FIVETRAN_DELETED
+        data_type: boolean
+        description: >
+          Indica si la fila fue eliminada por Fivetran.
+      - name: shipping_service_id
+        data_type: varchar
+        

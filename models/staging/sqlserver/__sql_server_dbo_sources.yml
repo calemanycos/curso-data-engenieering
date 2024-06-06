@@ -1,0 +1,92 @@
+version: 2
+sources:
+  - name: sql_server_dbo
+    schema: sql_server_dbo
+    database: ALUMNO22DEVBRONZEDB
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+    freshness:
+      warn_after:
+        count: 24
+        period: hour
+      error_after:
+        count: 48
+        period: hour
+    tables:
+      - name: addresses
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: address_id
+          - name: zipcode
+          - name: country
+          - name: address
+          - name: state
+          - name: _fivetran_deleted
+          - name: _fivetran_synced
+      - name: events
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: EVENT_ID
+          - name: PAGE_URL
+          - name: EVENT_TYPE
+          - name: USER_ID
+          - name: PRODUCT_ID
+          - name: SESSION_ID
+          - name: CREATED_AT
+          - name: ORDER_ID
+          - name: _FIVETRAN_DELETED
+          - name: _FIVETRAN_SYNCED
+      - name: orders
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: EVENT_ID
+          - name: PAGE_URL
+          - name: EVENT_TYPE
+          - name: USER_ID
+          - name: PRODUCT_ID
+          - name: SESSION_ID
+          - name: CREATED_AT
+          - name: ORDER_ID
+          - name: _FIVETRAN_DELETED
+          - name: _FIVETRAN_SYNCED
+      - name: order_items
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: ORDER_ID
+          - name: PRODUCT_ID
+          - name: QUANTITY
+          - name: _FIVETRAN_DELETED
+          - name: _FIVETRAN_SYNCED
+      - name: products
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: PRODUCT_ID
+          - name: PRICE
+          - name: NAME
+          - name: INVENTORY
+          - name: _FIVETRAN_DELETED
+          - name: _FIVETRAN_SYNCED
+      - name: promos
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: PROMO_ID
+          - name: DISCOUNT
+          - name: STATUS
+          - name: _FIVETRAN_DELETED
+          - name: _FIVETRAN_SYNCED
+      - name: users
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: USER_ID
+          - name: UPDATED_AT
+          - name: ADDRESS_ID
+          - name: LAST_NAME
+          - name: CREATED_AT
+          - name: PHONE_NUMBER
+          - name: TOTAL_ORDERS
+          - name: FIRST_NAME
+          - name: EMAIL
+          - name: _FIVETRAN_DELETED
+          - name: _FIVETRAN_SYNCED
