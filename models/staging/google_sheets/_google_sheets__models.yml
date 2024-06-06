@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: stg_google_sheets__budget
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: _row
+        tests:
+          - not_null
+        data_type: numeric
+        constraints:
+          - type: not_null
+        description: >
+          Número único para cada fila en la hoja de presupuesto.
+      - name: month
+        tests:
+          - not_null
+        data_type: date
+        constraints:
+          - type: not_null
+        description: >
+          La fecha para la cual es aplicable el presupuesto (formato: YYYY-MM-DD).
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_sql_server_dbo__products')
+              field: product_id
+        data_type: text
+        constraints:
+          - type: not_null
+        description: >
+          Identificador del producto asociado con la entrada de presupuesto.
+      - name: quantity
+        tests:
+          - not_null
+          - positive_values
+        data_type: numeric
+        constraints:
+          - type: not_null
+        description: >
+          La cantidad del producto asociado con la entrada de presupuesto.
+      - name: date_load_utc
+        tests:
+          - not_null
+        data_type: timestamptz
+        constraints:
+          - type: not_null
+        description: >
+          El momento en que se cargaron los datos del presupuesto en el sistema.
