@@ -7,9 +7,9 @@
     schema='sql_server'
 ) }}
 SELECT
-    0 AS Status_ID,
-    'Active' AS Status_Name
+    0 AS STATUS_ID,
+    'Active' AS STATUS_NAME
 UNION ALL
 SELECT
-    1 AS Status_ID,
-    'Inactive' AS Status_Name
+    1 AS STATUS_ID,
+    'Inactive' AS STATUS_NAME

@@ -6,7 +6,7 @@ WITH FECHIYA AS (
 )
 
 SELECT
-    DATE_DAY as date_id,
+    DATE_DAY AS DATE_ID,
     DAY_OF_WEEK,
     DAY_OF_MONTH,
     DAY_OF_YEAR,
