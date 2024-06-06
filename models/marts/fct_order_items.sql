@@ -3,10 +3,6 @@ WITH src_order_items AS (
     FROM {{ ref('stg_sql_server_dbo__order_items') }}
 ),
 
-src_products AS (
-    SELECT *
-    FROM {{ source('sql_server_dbo', 'products') }}
-),
 
 renamed_casted AS (
 SELECT 
