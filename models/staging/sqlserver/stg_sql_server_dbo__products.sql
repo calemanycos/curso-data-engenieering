@@ -1,11 +1,9 @@
 {{
   config(
-    materialized='view'
+    materialized='view',
+    schema='sql_server'
   )
 }}
-{{ config(
-    schema='sql_server'
-) }}
 
 WITH src_products AS (
     SELECT *
@@ -19,7 +17,7 @@ renamed_casted AS (
         name,
         inventory,
         _fivetran_deleted,
-       CONVERT_TIMEZONE('UTC', _fivetran_synced) AS date_load_UTC
+        CONVERT_TIMEZONE('UTC', _fivetran_synced) AS date_load_utc
     FROM src_products
     WHERE COALESCE(_fivetran_deleted, FALSE) = FALSE
 )

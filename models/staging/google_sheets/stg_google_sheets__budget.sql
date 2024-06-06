@@ -14,7 +14,7 @@ renamed_casted AS (
         _row,
         product_id,
         month,
-       CONVERT_TIMEZONE('UTC', _fivetran_synced) AS date_load_UTC,
+        CONVERT_TIMEZONE('UTC', _fivetran_synced) AS date_load_utc,
         COALESCE(quantity, 0) AS quantity
     FROM src_budget
 )
@@ -24,6 +24,6 @@ SELECT * FROM renamed_casted
 
 {% if is_incremental() %}
 
-  where date_load_UTC > (select max(date_load_UTC) from {{ this }})
+    WHERE date_load_utc > (SELECT MAX(date_load_utc) FROM {{ this }})
 
 {% endif %}
